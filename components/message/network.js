@@ -9,7 +9,7 @@ const router = express.Router();
 const response = require('../../network/response.js');
 const controller = require('./controller.js');
 
- //especificamos que solo responsa a peticiones GET
+ //ruta para obtener los mensajes. peticion get
 router.get('/', function(req, res){
     controller.getMessages()
         .then((messagesList)=>{
@@ -20,7 +20,7 @@ router.get('/', function(req, res){
         })
 });
 
-//especificamos que tambien responda desde POST
+//ruta para añadir un mensaje. peticion post
 router.post('/', function(req, res){
     /**
      * el objeto user y message pueden venir en el body de la peticion
@@ -42,8 +42,18 @@ router.put('/', (req,res) => {
     response.success(req, res, 'Mensaje editado (Hola desde put)');
 });
 
-router.patch('/', (req,res) => {
-    response.success(req, res, 'Mensaje editado (Hola desde patch)');
+//ruta para modificar mensajes. peticion patch para modificaciones parciales
+router.patch('/:id', (req,res) => {
+    console.info(req.params.id);
+
+    controller.updateMessage(req.params.id, req.body.message)
+        .then((data)=>{
+            response.success(req, res, data, 200);
+        })
+        .catch((error)=>{
+            response.error(req, res, 'Error interno', 500, error);
+        })
+        //res.send('Ok');
 });
 
 router.delete('/', (req,res) => {
