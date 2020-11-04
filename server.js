@@ -1,11 +1,20 @@
 const express = require('express');
-const response = require('./network/response.js');
-const router = require('./components/message/network.js');//roter de mensajes
+//const router = require('./components/message/network.js');//roter de mensajes
+const router = require('./network/routes.js');
 
 var app = express();
 app.use(express.json()); 
 app.use(express.urlencoded({extended: true}));
-app.use(router);
+
+/**
+ * 1. Le pasamos el servidor de express creado y configurado a nuestro router
+ * 2. Routes se encarga de llamar a nuestro componente de network (message)
+ * 3. Network procesa nuestra peticion
+ */
+router(app);
+//app.use(router);
+
+
 app.use('/app', express.static('public'));
 
 app.listen(3000);

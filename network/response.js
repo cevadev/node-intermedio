@@ -1,4 +1,6 @@
-/**modulo para responder a las peticiones de forma coherente */
+/**modulo para responder a las peticiones de forma coherente 
+ * Response maneja todas las respuestas de red
+*/
 
 /**
  * Funcion que prepara un response
