@@ -3,7 +3,7 @@
 //importamos el store para operaciones de almacenamiento de messages
 const store = require('./store.js');
 
-function addMessage(user, message){
+function addMessage(chat, user, message){
     
     /**
      * retornamos una promesa, validando que haya un usuario
@@ -17,10 +17,11 @@ function addMessage(user, message){
         }
 
         const fullMessage = {
-        user: user,
-        message: message,
-        date: new Date(),
-    }
+            chat: chat,
+            user: user,
+            message: message,
+            date: new Date(),
+        }
        //almacenamos el mensaje
        store.add(fullMessage);
         resolve(fullMessage);

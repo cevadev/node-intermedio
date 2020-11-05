@@ -12,7 +12,7 @@ const controller = require('./controller.js');
  //ruta para obtener los mensajes. peticion get
 router.get('/', function(req, res){
     //obtenemos el usuario del query, para que filtre los mensajes si no hay valor colocamos uno por defecto de null
-    const filterMessages = req.query.user || null;
+    const filterMessages = req.query.chat || null;
     controller.getMessages(filterMessages)
         .then((messagesList)=>{
             response.success(req, res, messagesList, 200);
@@ -27,7 +27,7 @@ router.post('/', function(req, res){
     /**
      * el objeto user y message pueden venir en el body de la peticion
      */
-    controller.addMessage(req.body.user, req.body.message)
+    controller.addMessage(req.body.chat, req.body.user, req.body.message)
         //recibimos el objeto fullMessage de la promesa
         .then((fullMessage)=>{
             response.success(req, res, `el usuario ${fullMessage.user} anadió el mensaje ${fullMessage.message} ${fullMessage.date}`, 201);
