@@ -2,6 +2,11 @@ const express = require('express');
 //const router = require('./components/message/network.js');//roter de mensajes
 const router = require('./network/routes.js');
 
+const db = require('./db.js');
+
+const connectionString = 'mongodb+srv://barcvilla:root@cluster0.nldop.mongodb.net/platzimessages_db?retryWrites=true&w=majority';
+
+db(connectionString);
 var app = express();
 app.use(express.json()); 
 app.use(express.urlencoded({extended: true}));

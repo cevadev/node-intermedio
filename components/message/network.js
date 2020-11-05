@@ -11,7 +11,9 @@ const controller = require('./controller.js');
 
  //ruta para obtener los mensajes. peticion get
 router.get('/', function(req, res){
-    controller.getMessages()
+    //obtenemos el usuario del query, para que filtre los mensajes si no hay valor colocamos uno por defecto de null
+    const filterMessages = req.query.user || null;
+    controller.getMessages(filterMessages)
         .then((messagesList)=>{
             response.success(req, res, messagesList, 200);
         })
@@ -56,8 +58,15 @@ router.patch('/:id', (req,res) => {
         //res.send('Ok');
 });
 
-router.delete('/', (req,res) => {
-    response.success(req, res, 'Mensaje borrado (Hola desde delete)');
+//ruta para eliminar un mensaje determinado
+router.delete('/:id', (req,res) => {
+    controller.deleteMessage(req.params.id)
+        .then(()=>{
+            response.success(req, res, `Menssage ${req.params.id} se eliminó correctamente`, 200);
+        })
+        .catch((error)=>{
+            response.error(req, res, 'Error interno', 500, error);
+        })
 });
 
 module.exports = router;

@@ -3,33 +3,26 @@
  * messageList -> array donde guardamos nuestros mensaje
  */
 
-//nos traemos a mongoose
-const db = require('mongoose');
+
 const Model = require('./model.js');
-
-const connectionString = 
-'mongodb+srv://barcvilla:root@cluster0.nldop.mongodb.net/platzimessages_db?retryWrites=true&w=majority';
-
-//le pedimos a mongoose que utilice la promesas
-db.Promise = global.Promise;
-
-//conexion con la bd
-db.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(()=>{
-        console.info('[db] conectada con éxito');
-    })
-    .catch((error)=>{
-        console.error('[db] ', error);
-    })
 
  function addMessage(message){
      const myMessage = new Model(message);
      myMessage.save();
  }
 
- async function getMessages(){
+ async function getMessages(user){
+    //creamos el filtro para obtener los mensajes de un usuario en particular
+    let filter = {};
+    
+    if(user !== null){
+        filter = {
+            //traemos el user que conincide con el parametro user no importa si esta en mayuscula o minuscula
+            user: new RegExp(`^${user}$`, "i")
+        }
+     }
      //pedimos todos los documentos
-     const messages = await Model.find();
+     const messages = await Model.find(filter);
      return messages;
  }
 
@@ -42,8 +35,23 @@ db.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true }
      return newMessage;
  }
 
+ async function existDB(id) {
+    const exist = await Model.exists({
+        _id:id
+    });
+    return exist;
+}
+
+ function removeMessage(id){
+    //retorna una promesa
+    return Model.findByIdAndDelete({
+        _id: id
+    })
+ }
+
  module.exports = {
      add: addMessage,
      list: getMessages,
      updateText: updateText,
+     removeMessage: removeMessage,
  }

@@ -28,9 +28,9 @@ function addMessage(user, message){
     
 }
 
-function getMessages(){
+function getMessages(user){
     return new Promise((resolve, reject)=>{
-        resolve(store.list());
+        resolve(store.list(user));
     });
 }
 
@@ -45,9 +45,27 @@ function updateMessage(id, message){
     });
 }
 
+function deleteMessage(id){
+    return new Promise((resolve, reject)=>{
+        if(!id){
+            reject('Id invalid');
+            return false;
+        }
+
+        store.removeMessage(id)
+            .then(()=>{
+                resolve();
+            })
+            .catch((error)=>{
+                reject(error);
+            })
+    });
+}
+
 //exportamos un objeto
 module.exports = {
     addMessage,
     getMessages,
     updateMessage,
+    deleteMessage,
 }
