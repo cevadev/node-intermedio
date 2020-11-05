@@ -1,6 +1,7 @@
 /**Manejamos toda la informaciónde router y la gestion de las herramientas de red tanto de respuestas como las rutas*/
 const express = require('express');
 const message = require('../components/message/network.js');
+const user = require('../components/user/network.js');
 
 /**
  * funcion que añade todas las rutas:
@@ -10,6 +11,7 @@ const message = require('../components/message/network.js');
 const routes = function(server){
     //todas las llamadas hacia message las gestiona message que llama al componente network
     server.use('/message', message);
+    server.use('/user', user);
 }
 
 module.exports = routes;

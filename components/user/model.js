@@ -5,18 +5,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 //creamos nuestro esquema pra indicarle a mongoose que tipo de info queremos almacenar
 const mySchema = new Schema({
-    //relacionamos nuestro componente User con el componente Message
-    user: {
-        type: Schema.ObjectId,
-        ref: 'User'
-    },
-    message: {
-        //definimos el tipo del mensaje
-        type: String,
-        //especificamos que siempre se requerira un mensaje
-        required: true,
-    },
-    date: Date,
+  name: String,
 });
 
 /**
@@ -26,6 +15,6 @@ const mySchema = new Schema({
  * 1. nombre de la coleccion en mongo
  * 2. Nuestro esquema elaborado
  */
-const model = mongoose.model('messages', mySchema);
+const model = mongoose.model('User', mySchema);
 
 module.exports = model;

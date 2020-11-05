@@ -12,18 +12,34 @@ const Model = require('./model.js');
  }
 
  async function getMessages(user){
-    //creamos el filtro para obtener los mensajes de un usuario en particular
-    let filter = {};
-    
-    if(user !== null){
-        filter = {
-            //traemos el user que conincide con el parametro user no importa si esta en mayuscula o minuscula
-            user: new RegExp(`^${user}$`, "i")
+     return new Promise((resolve, reject)=>
+    {
+        //creamos el filtro para obtener los mensajes de un usuario en particular
+        let filter = {};
+            
+        if(user !== null){
+            filter = {
+                //traemos el user que conincide con el parametro user no importa si esta en mayuscula o minuscula
+                user: new RegExp(`^${user}$`, "i")
+            }
         }
-     }
-     //pedimos todos los documentos
-     const messages = await Model.find(filter);
-     return messages;
+        /**
+        * Pedidmos todos los mensajes, en lugar de mostrar el id del usuario queremos insertamos toa la info del user
+        */
+        Model.find(filter)
+            //con populate() buscamos dentro de cada elemento (Message) los ObjectId (que es el campo user)
+            .populate('user')
+            //ejecutamos el populate()
+            .exec((error, populated)=>{
+                if(error){
+                    reject(error);
+                    return false;
+                }
+                //resolvemos con la información poblada
+                resolve(populated)
+            }
+        ) 
+    });
  }
 
  async function updateText(id, message){
