@@ -5,9 +5,23 @@
  */
 
 const express = require('express');
+const multer = require('multer');
+const path = require("path");
 const router = express.Router();
 const response = require('../../network/response.js');
 const controller = require('./controller.js');
+
+//creamos una instancia de multer
+const storage = multer.diskStorage({
+    //enviamos los archivos a la carpeta upload
+    destination: 'public/files/',
+    filename : function (req, file, cb) {
+        cb(null, file.fieldname + "-" + Date.now() + 
+        path.extname(file.originalname))
+    }
+})
+
+const upload = multer({ storage: storage });
 
  //ruta para obtener los mensajes. peticion get
 router.get('/', function(req, res){
@@ -23,11 +37,11 @@ router.get('/', function(req, res){
 });
 
 //ruta para añadir un mensaje. peticion post
-router.post('/', function(req, res){
+router.post('/', upload.single('file'), function(req, res){
     /**
      * el objeto user y message pueden venir en el body de la peticion
      */
-    controller.addMessage(req.body.chat, req.body.user, req.body.message)
+    controller.addMessage(req.body.chat, req.body.user, req.body.message, req.file)
         //recibimos el objeto fullMessage de la promesa
         .then((fullMessage)=>{
             response.success(req, res, `el usuario ${fullMessage.user} anadió el mensaje ${fullMessage.message} ${fullMessage.date}`, 201);

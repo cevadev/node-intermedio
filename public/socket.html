@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>websockets</title>
+    <!--llamamos al archivo por defecto que crea el socketio-->
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <h1>Mira la consola</h1>
+    <!--inicializamos una conexion de socket-->
+    <script>
+        var socket = io.connect('http://localhost:3000', {
+            forceNew: true,
+        });
+        //escuchamos mensajes. desde la consola debe ejecutar el archivo index.js (node index.js)
+        socket.on('message', function (data) {
+            console.log(data);
+        });
+    </script>
+</body>
+
+</html>
