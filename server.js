@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
-
+//cargamos nuestra configuracion
+const config = require('./config.js');
+const cors = require('cors');
 /**
  * websocket
  */
@@ -14,9 +16,10 @@ const socket = require('./socket.js');
 //const router = require('./components/message/network.js');//roter de mensajes
 const router = require('./network/routes.js');
 const db = require('./db.js');
-const connectionString = 'mongodb+srv://barcvilla:root@cluster0.nldop.mongodb.net/platzimessages_db?retryWrites=true&w=majority';
+const connectionString = config.dbUrl;
 
 db(connectionString);
+app.use(cors());
 app.use(express.json()); 
 app.use(express.urlencoded({extended: true}));
 
@@ -31,11 +34,11 @@ router(app);
 //app.use(router);
 
 
-app.use('/app', express.static('public'));
+app.use(config.publicRoute, express.static('public'));
 
 //websocket
-server.listen(3000, function(){
-    console.log('Estoy escuchando por http://localhost:3000 que es el puerto por el que escucho.');
+server.listen(config.port, function(){
+    console.log(`La aplicacion está escuchando en ${config.host}:${config.port}`);
 });
 //websocket
 

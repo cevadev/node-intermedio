@@ -2,6 +2,15 @@
  * Response maneja todas las respuestas de red
 */
 
+/**Objeto con los codigo de respuesta */
+const statusMessages = {
+    '200': 'Done',
+    '201': 'Created',
+    '400': 'Invalid format',
+    '500': 'Internal error'
+}
+
+
 /**
  * Funcion que prepara un response
  * @param {*} request objeto request
@@ -10,11 +19,21 @@
  */
 exports.success = function(request, response, message, status){
     //retornamos un objeto como respuestay el status. Si no viene un status enviamos un status 200
-    response.status(status || 200).send({
+    let statusCode = status;
+    let statusMessage = message;
+    
+    if (!status) {
+        status = 200;
+    }
+
+    if (!message) {
+        statusMessage = statusMessages[status];
+    }
+
+    res.status(statusCode).send({ 
         error: '',
-        body: message
-    })
-    //response.send(message);
+        body: statusMessage
+    });
 }
 
 /**
@@ -27,11 +46,16 @@ exports.success = function(request, response, message, status){
  */
 exports.error = function(request, response, message, status, details){
     //imprimimos lo que ha sucedido
-    console.error(`[response error: ] ${details}`);
-    //retornamos un objeto como respuestay el status. Si no viene un status enviamos un status 200
-    response.status(status || 500).send({
-        error: message,
-        body: ''
-    })
-    //response.send(message);
+    let statusCode = status;
+    let statusMessage = message;
+    if(!status){
+        status = 500;
+    }
+    if(!message){
+        statusMessage = statusMessages[status];
+    }
+    res.status(statusCode).send({ 
+        error: statusMessage,
+        body: '',
+    });
 }
